@@ -25,15 +25,13 @@ module.exports = class Servers {
             location: vscode.ProgressLocation.Notification,
             title: `IWS`,
           }, async progress => {
-            let result;
-            
             progress.report({ message: `Starting ${node.server}${node.service ? ` (${node.service})` : ``}` });
 
             try {
               if (node.service) {
-                result = await iws.startService(node.server, node.service);
+                await iws.startService(node.server, node.service);
               } else {
-                result = await iws.startServer(node.server);
+                await iws.startServer(node.server);
               }
             
               vscode.window.showInformationMessage(`Started ${node.server}${node.service ? ` (${node.service})` : ``}`);
@@ -54,15 +52,13 @@ module.exports = class Servers {
             location: vscode.ProgressLocation.Notification,
             title: `IWS`,
           }, async progress => {
-            let result;
-            
             progress.report({ message: `Stopping ${node.server}${node.service ? ` (${node.service})` : ``}` });
 
             try {
               if (node.service) {
-                result = await iws.stopService(node.server, node.service);
+                await iws.stopService(node.server, node.service);
               } else {
-                result = await iws.stopServer(node.server);
+                await iws.stopServer(node.server);
               }
             
               vscode.window.showInformationMessage(`Stopped ${node.server}${node.service ? ` (${node.service})` : ``}`);
@@ -88,12 +84,10 @@ module.exports = class Servers {
                 location: vscode.ProgressLocation.Notification,
                 title: `IWS`,
               }, async progress => {
-                let result;
-              
                 progress.report({ message: `Creating Server ${data.server}` });
   
                 try {
-                  result = await iws.createServer(data);
+                  await iws.createServer(data);
                   vscode.window.showInformationMessage(`Created ${data.server}.`);
                   this.refresh();
                 } catch (e) {
@@ -105,6 +99,35 @@ module.exports = class Servers {
             } else {
               vscode.window.showWarningMessage(`Server name and starting port required.`);
             }
+          }
+        }
+      }),
+
+      vscode.commands.registerCommand(`vscode-ibmi-iws.deleteServer`, async (node) => {
+        if (node) {
+          const connection = instance.getConnection();
+          if (connection) {
+
+            const confirmation = await vscode.window.showWarningMessage(`Are you sure you want to delete ${node.server}?`, `Yes`, `Cancel`);
+
+            if (confirmation === `Yes`) {
+              vscode.window.withProgress({
+                location: vscode.ProgressLocation.Notification,
+                title: `IWS`,
+              }, async progress => {
+                progress.report({ message: `Deleting Server ${node.server}` });
+  
+                try {
+                  await iws.deleteServer(node.server);
+                  vscode.window.showInformationMessage(`Deleted ${node.server}.`);
+                  this.refresh();
+                } catch (e) {
+                  vscode.window.showInformationMessage(`Failed to delete ${node.server}.`);
+                  console.log(e);
+                }
+              })
+            }
+
           }
         }
       })

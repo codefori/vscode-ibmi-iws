@@ -46,6 +46,11 @@
 				"icon": "$(add)"
 			},
 			{
+				"command": "vscode-ibmi-iws.deleteServer",
+				"title": "Delete Server",
+				"category": "IWS"
+			},
+			{
 				"command": "vscode-ibmi-iws.itemStart",
 				"title": "Start",
 				"category": "IWS",
@@ -90,6 +95,10 @@
 				}
 			],
 			"view/item/context": [
+				{
+					"command": "vscode-ibmi-iws.deleteServer",
+					"when": "view == iwsExplorer && viewItem == iwsServer-stopped"
+				},
 				{
 					"command": "vscode-ibmi-iws.itemStart",
 					"when": "view == iwsExplorer && viewItem == iwsServer-stopped",

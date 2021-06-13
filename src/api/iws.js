@@ -112,10 +112,18 @@ module.exports = class IWS {
 
   /**
    * Create IWS server
-   * @param {object} server 
+   * @param {object} data 
    */
   static createServer(data) {
     return this.runFromParameters(`createWebServicesServer`, data);
+  }
+
+  /**
+   * Delete IWS server
+   * @param {string} server 
+   */
+  static deleteServer(server) {
+    return this.run(`deleteWebServicesServer`, `-server '${server}'`);
   }
 
   /**
