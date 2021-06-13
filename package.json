@@ -1,0 +1,128 @@
+{
+	"name": "vscode-ibmi-iws",
+	"displayName": "Code Coverage for IBM i",
+	"description": "Run and display Code Coverage on your IBM i right from VS Code.",
+	"version": "0.0.7",
+	"repository": {
+		"url": "https://github.com/halcyon-tech/vscode-ibmi-iws"
+	},
+	"engines": {
+		"vscode": "^1.54.0"
+	},
+	"keywords": [
+		"git",
+		"ibmi",
+		"iseries",
+		"as400"
+	],
+	"author": {
+		"name": "Halcyon Tech Ltd",
+		"url": "https://github.com/halcyon-tech"
+	},
+	"publisher": "halcyontechltd",
+	"extensionDependencies": [
+		"halcyontechltd.code-for-ibmi"
+	],
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"onView:iwsExplorer",
+		"onCommand:vscode-ibmi-iws.refreshIWSExplorer"
+	],
+	"main": "./dist/extension",
+	"contributes": {
+		"commands": [
+			{
+				"command": "vscode-ibmi-iws.refreshIWSExplorer",
+				"title": "Refresh server list",
+				"category": "IWS",
+				"icon": "$(refresh)"
+			},
+			{
+				"command": "vscode-ibmi-iws.itemStart",
+				"title": "Start",
+				"category": "IWS",
+				"icon": "$(debug-start)"
+			},
+			{
+				"command": "vscode-ibmi-iws.itemStop",
+				"title": "Stop",
+				"category": "IWS",
+				"icon": "$(debug-stop)"
+			}
+		],
+		"viewsWelcome": [],
+		"viewsContainers": {
+			"activitybar": [
+				{
+					"id": "ibmi-iws",
+					"title": "IBM i IWS",
+					"icon": "$(globe)"
+				}
+			]
+		},
+		"views": {
+			"ibmi-iws": [
+				{
+					"id": "iwsExplorer",
+					"name": "Explorer"
+				}
+			]
+		},
+		"menus": {
+			"view/title": [
+				{
+					"command": "vscode-ibmi-iws.refreshIWSExplorer",
+					"group": "navigation",
+					"when": "view == iwsExplorer"
+				}
+			],
+			"view/item/context": [
+				{
+					"command": "vscode-ibmi-iws.itemStart",
+					"when": "view == iwsExplorer && viewItem == iwsServer-stopped",
+					"group": "inline"
+				},
+				{
+					"command": "vscode-ibmi-iws.itemStart",
+					"when": "view == iwsExplorer && viewItem == iwsService-stopped",
+					"group": "inline"
+				},
+				{
+					"command": "vscode-ibmi-iws.itemStop",
+					"when": "view == iwsExplorer && viewItem == iwsService-running",
+					"group": "inline"
+				},
+				{
+					"command": "vscode-ibmi-iws.itemStop",
+					"when": "view == iwsExplorer && viewItem == iwsServer-running",
+					"group": "inline"
+				}
+			]
+		}
+	},
+	"scripts": {
+		"pretest": "npm run lint",
+		"lint": "eslint src",
+		"package": "vsce package",
+		"vscode:prepublish": "webpack --mode production",
+		"webpack": "webpack --mode development",
+		"webpack-dev": "webpack --mode development --watch"
+	},
+	"devDependencies": {
+		"@types/vscode": "^1.54.0",
+		"@types/glob": "^7.1.3",
+		"@types/mocha": "^8.0.4",
+		"@types/node": "^12.11.7",
+		"eslint": "^7.19.0",
+		"@typescript-eslint/eslint-plugin": "^4.14.1",
+		"@typescript-eslint/parser": "^4.14.1",
+		"glob": "^7.1.6",
+		"mocha": "^8.2.1",
+		"vscode-test": "^1.5.0",
+		"webpack": "^5.24.3",
+		"webpack-cli": "^4.5.0"
+	},
+	"dependencies": {}
+}
