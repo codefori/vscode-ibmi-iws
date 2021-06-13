@@ -40,6 +40,12 @@
 				"icon": "$(refresh)"
 			},
 			{
+				"command": "vscode-ibmi-iws.createServer",
+				"title": "Create Server",
+				"category": "IWS",
+				"icon": "$(add)"
+			},
+			{
 				"command": "vscode-ibmi-iws.itemStart",
 				"title": "Start",
 				"category": "IWS",
@@ -74,6 +80,11 @@
 			"view/title": [
 				{
 					"command": "vscode-ibmi-iws.refreshIWSExplorer",
+					"group": "navigation",
+					"when": "view == iwsExplorer"
+				},
+				{
+					"command": "vscode-ibmi-iws.createServer",
 					"group": "navigation",
 					"when": "view == iwsExplorer"
 				}

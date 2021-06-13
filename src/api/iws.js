@@ -5,9 +5,9 @@ const {instance} = vscode.extensions.getExtension(`halcyontechltd.code-for-ibmi`
 
 module.exports = class IWS {
   /**
-   * @param {'listWebServicesServers'|'listWebServices'} command 
-   * @param {*} paramaters 
-   * @returns {Promise<{code: number, stdout: string, stderr: string}>}
+   * @param {string} command 
+   * @param {string} paramaters 
+   * @returns {Promise<string>}
    */
   static async run(command, paramaters) {
     const connection = instance.getConnection();
@@ -23,6 +23,33 @@ module.exports = class IWS {
         output: result.stdout
       })
     }
+  }
+
+  /**
+   * @param {string} command 
+   * @param {{[paramater: string]: string|boolean}} paramaters 
+   * @returns {Promise<string>}
+   */
+  static runFromParameters(command, paramaters) {
+    let commandParms = [];
+
+    for (const parm in paramaters) {
+      switch (typeof paramaters[parm]) {
+
+      case `boolean`:
+        if (paramaters[parm]) commandParms.push(`-${parm}`);
+        break;
+
+      case `string`:
+        if (paramaters[parm].trim() !== ``) {
+          if (paramaters[parm]) commandParms.push(`-${parm} '${paramaters[parm]}'`);
+        }
+
+        break;
+      }
+    }
+
+    return this.run(command, commandParms.join(` `));
   }
 
   /**
@@ -81,6 +108,14 @@ module.exports = class IWS {
     } catch (e) {
       return false;
     }
+  }
+
+  /**
+   * Create IWS server
+   * @param {object} server 
+   */
+  static createServer(data) {
+    return this.runFromParameters(`createWebServicesServer`, data);
   }
 
   /**

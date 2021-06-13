@@ -4,6 +4,7 @@ const vscode = require(`vscode`);
 const {instance, Field, CustomUI} = vscode.extensions.getExtension(`halcyontechltd.code-for-ibmi`).exports;
 
 const iws = require(`../api/iws`);
+const createServerUI = require(`./createServerUI`);
 
 module.exports = class Servers {
   /**
@@ -72,7 +73,40 @@ module.exports = class Servers {
             }
           })
         }
+      }),
 
+      vscode.commands.registerCommand(`vscode-ibmi-iws.createServer`, async () => {
+        const connection = instance.getConnection();
+
+        if (connection) {
+          const data = await createServerUI();
+
+          if (data) {
+            if (data.server && data.startingPort) {
+
+              vscode.window.withProgress({
+                location: vscode.ProgressLocation.Notification,
+                title: `IWS`,
+              }, async progress => {
+                let result;
+              
+                progress.report({ message: `Creating Server ${data.server}` });
+  
+                try {
+                  result = await iws.createServer(data);
+                  vscode.window.showInformationMessage(`Created ${data.server}.`);
+                  this.refresh();
+                } catch (e) {
+                  vscode.window.showInformationMessage(`Failed to create ${data.server}.`);
+                  console.log(e);
+                }
+              })
+
+            } else {
+              vscode.window.showWarningMessage(`Server name and starting port required.`);
+            }
+          }
+        }
       })
 
     );
