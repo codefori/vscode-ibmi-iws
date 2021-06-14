@@ -5,6 +5,7 @@ const {instance, Field, CustomUI} = vscode.extensions.getExtension(`halcyontechl
 
 const iws = require(`../api/iws`);
 const createServerUI = require(`./createServerUI`);
+const serverPropertiesUI = require("./serverPropertiesUI");
 
 module.exports = class Servers {
   /**
@@ -100,6 +101,34 @@ module.exports = class Servers {
               vscode.window.showWarningMessage(`Server name and starting port required.`);
             }
           }
+        }
+      }),
+
+      vscode.commands.registerCommand(`vscode-ibmi-iws.getProperties`, async (node) => {
+        const connection = instance.getConnection();
+
+        if (connection) {
+          vscode.window.withProgress({
+            location: vscode.ProgressLocation.Notification,
+            title: `IWS`,
+          }, async progress => {
+            progress.report({ message: `Getting ${node.server}${node.service ? ` (${node.service})` : ``} properties.` });
+  
+            try {
+              let props;
+              if (node.service) {
+                props = await iws.getServiceProperties(node.server, node.service);
+              } else {
+                props = await iws.getServerProperties(node.server);
+              }
+
+              serverPropertiesUI(props);
+            } catch (e) {
+              vscode.window.showInformationMessage(`Failed to get ${node.server}${node.service ? ` (${node.service})` : ``} properties.`);
+              console.log(e);
+            }
+          })
+
         }
       }),
 

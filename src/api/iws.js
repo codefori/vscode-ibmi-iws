@@ -82,6 +82,65 @@ module.exports = class IWS {
   }
 
   /**
+   * @param {string} server 
+   * @returns {Promise<{name: string, value: string}[]|false>}
+   */
+  static async getServerProperties(server) {
+    try {
+      const result = await this.run(`getWebServicesServerProperties`, `-server '${server}'`);
+      const lines = result.split(`\n`);
+
+      let properties = [];
+      
+      lines.forEach(line => {
+        if (line.includes(`:`)) {
+          const [name, value] = line.split(`:`);
+
+          properties.push({
+            name: name.trim(),
+            value: value.trim()
+          })
+        }
+      })
+
+      return properties;
+
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /**
+   * @param {string} server 
+   * @param {string} service 
+   * @returns {Promise<{name: string, value: string}[]|false>}
+   */
+  static async getServiceProperties(server, service) {
+    try {
+      const result = await this.run(`getWebServiceProperties`, `-server '${server}' -service '${service}'`);
+      const lines = result.split(`\n`);
+
+      let properties = [];
+      
+      lines.forEach(line => {
+        if (line.includes(`:`)) {
+          const [name, value] = line.split(`:`);
+
+          properties.push({
+            name: name.trim(),
+            value: value.trim()
+          })
+        }
+      })
+
+      return properties;
+
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /**
    * @returns {Promise<{name: string, running: boolean}[]>|false}
    */
   static async getServices(server) {

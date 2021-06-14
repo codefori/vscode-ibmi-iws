@@ -27,8 +27,7 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onView:iwsExplorer",
-		"onCommand:vscode-ibmi-iws.refreshIWSExplorer"
+		"onView:iwsExplorer"
 	],
 	"main": "./dist/extension",
 	"contributes": {
@@ -38,6 +37,11 @@
 				"title": "Refresh server list",
 				"category": "IWS",
 				"icon": "$(refresh)"
+			},
+			{
+				"command": "vscode-ibmi-iws.getProperties",
+				"title": "Get Properties",
+				"category": "IWS"
 			},
 			{
 				"command": "vscode-ibmi-iws.createServer",
@@ -95,6 +99,10 @@
 				}
 			],
 			"view/item/context": [
+				{
+					"command": "vscode-ibmi-iws.getProperties",
+					"when": "view == iwsExplorer"
+				},
 				{
 					"command": "vscode-ibmi-iws.deleteServer",
 					"when": "view == iwsExplorer && viewItem == iwsServer-stopped"
